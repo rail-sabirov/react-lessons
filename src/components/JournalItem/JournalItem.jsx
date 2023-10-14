@@ -1,7 +1,6 @@
 import './JournalItem.css';
 
 function JournalItem({title, text, date}) {
-	const localDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
 	const ruDate = new Intl.DateTimeFormat('ru-RU').format(date);
 
 	return (
