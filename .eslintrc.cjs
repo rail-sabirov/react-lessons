@@ -22,6 +22,8 @@ module.exports = {
       { "omitLastInOneLineBlock": false }
     ],
     'comma-dangle': ["error", "never"],
-    "quotes": ["error", "single"]
+    "quotes": ["error", "single"],
+    'indent': ['error', 'tab'],
+    'react/prop-types': [0]
   },
 }
