@@ -2,7 +2,7 @@ import './Header.css';
 
 const Header = () => {
 	return (
-		<>Logo</>
+		<img className='logo' src="/logo.svg" alt="Journal logo" />
 	);
 };
 
