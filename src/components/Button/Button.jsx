@@ -9,12 +9,14 @@ function Button() {
 	const clicked = () => {
 		if (buttonText == 'Save') {
 			setButtonText('Close');
+			console.log('Button is was clicked! - Close');
 		
 		} else {
 			setButtonText('Save');
+			console.log('Button is was clicked! - Save');
 		}
 		
-		console.log('Button is was clicked!');
+		
 	};
 
 	return (
