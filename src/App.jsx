@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 import CardButton from './components/CardButton/CardButton';
 import Header from './components/Header/Header';
@@ -21,9 +22,17 @@ function App() {
 		}
 	];
 
+	// Состояние, для храненеия строки ввода в input
+	const [inputData, setInputData] = useState();
+
 	// Функция обработчик поля ввода
 	const inputChange = (event) => {
-		console.log(event.target.value);
+		const val = event.target.value;
+		const inputValue = (val + '').trim();
+
+		console.log(inputValue);
+		
+		setInputData(inputValue);
 	}
 
 	return (
@@ -49,7 +58,7 @@ function App() {
 				</JournalList>
 			</LeftPanel>
 			<Body>
-				<input type='text' onChange={inputChange} />
+				<input type='text' value={inputData} onChange={inputChange} />
 			</Body>
 		</div>
 	);
