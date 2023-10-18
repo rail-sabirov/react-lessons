@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import './App.css';
 import CardButton from './components/CardButton/CardButton';
 import Header from './components/Header/Header';
 import JournalAddButton from './components/JournalAddButton/JournalAddButton';
+import JournalForm from './components/JournalForm/JournalForm';
 import JournalItem from './components/JournalItem/JournalItem';
 import JournalList from './components/JournalList/JournalList';
 import Body from './layouts/Body/Body';
@@ -21,19 +21,6 @@ function App() {
 			date: new Date()
 		}
 	];
-
-	// Состояние, для храненеия строки ввода в input
-	const [inputData, setInputData] = useState();
-
-	// Функция обработчик поля ввода
-	const inputChange = (event) => {
-		const val = event.target.value;
-		const inputValue = (val + '').trim();
-
-		console.log(inputValue);
-		
-		setInputData(inputValue);
-	}
 
 	return (
 		<div className="app">
@@ -58,7 +45,7 @@ function App() {
 				</JournalList>
 			</LeftPanel>
 			<Body>
-				<input type='text' value={inputData} onChange={inputChange} />
+				<JournalForm/>
 			</Body>
 		</div>
 	);
