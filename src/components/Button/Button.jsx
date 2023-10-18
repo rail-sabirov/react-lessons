@@ -1,9 +1,12 @@
 import './Button.css';
-import { useState } from 'react';
 
-function Button({ text }) {
+function Button({ text, onClickHandlerFunction }) {
 	return (
-		<button className='button accent'>{ text }</button>
+		<button 
+			className='button accent' 
+			onClick={ onClickHandlerFunction }>
+				{ text }
+		</button>
 	);
 }
 
