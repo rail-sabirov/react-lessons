@@ -1,4 +1,5 @@
 import './App.css';
+import Button from './components/Button/Button';
 import CardButton from './components/CardButton/CardButton';
 import Header from './components/Header/Header';
 import JournalAddButton from './components/JournalAddButton/JournalAddButton';
@@ -11,11 +12,13 @@ import LeftPanel from './layouts/LeftPanel/LeftPanel';
 function App() {
 	const data = [
 		{
+			id: 1,
 			title: 'Подготовка к обновлению курсов',
 			text: 'Думал, что очень много времени...',
 			date: new Date()
 		},
 		{
+			id: 2,
 			title: 'Поход в горы',
 			text: 'Горные походы открывают удивительные природные ландшафты',
 			date: new Date()
@@ -28,20 +31,19 @@ function App() {
 				<Header />
 				<JournalAddButton/>
 				<JournalList>
-					<CardButton>
-						<JournalItem
-							title={data[0].title}
-							text={data[0].text}
-							date={data[0].date}
-						/>
-					</CardButton>
-					<CardButton>
-						<JournalItem
-							title={data[1].title}
-							text={data[1].text}
-							date={data[1].date}
-						/>
-					</CardButton>
+					{/* [<Button text='Button 1'></Button>, <Button text='Button 2'></Button>] */}
+
+					{ data.map(el => (
+						<CardButton key={el.id}>
+							<JournalItem
+								title={el.title}
+								text={el.text}
+								date={el.date}
+							/>
+						</CardButton>
+					)) }
+					
+					
 				</JournalList>
 			</LeftPanel>
 			<Body>

@@ -31,10 +31,10 @@ function JournalForm() {
 
     return (
         <form className='journal-form' onSubmit={addJournalItem}>
-            <input type="text" name="title" />
-            <input type="date" name="date" />
-            <input type="text" name="tag" value={inputData} onChange={inputChange} />
-            <textarea name="post" id="" cols="30" rows="10"></textarea>
+            <input type="text" name="title" placeholder='Enter title'/>
+            <input type="date" name="date"/>
+            <input type="text" name="tag" value={inputData} onChange={inputChange} placeholder='Enter tag'/>
+            <textarea name="post" id="" cols="30" rows="10" placeholder='Enter post'></textarea>
             <Button 
                 text="Save" 
                 onClickHandlerFunction={
