@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 import Button from './components/Button/Button';
 import CardButton from './components/CardButton/CardButton';
@@ -10,20 +11,34 @@ import Body from './layouts/Body/Body';
 import LeftPanel from './layouts/LeftPanel/LeftPanel';
 
 function App() {
-	const data = [
+	const INITIAL_DATA = [
 		{
-			id: 1,
 			title: 'Подготовка к обновлению курсов',
 			text: 'Думал, что очень много времени...',
 			date: new Date()
 		},
 		{
-			id: 2,
 			title: 'Поход в горы',
 			text: 'Горные походы открывают удивительные природные ландшафты',
 			date: new Date()
 		}
 	];
+
+	// Стейт для изменений в массиве
+	const [items, setItems] = useState(INITIAL_DATA);
+
+	// Функция для добавления новой записи в журнал
+	const addItem = (item) => {
+		// Добавляем новую запись в журнал используюя 
+		// строковую функцию получаем старое значение
+		setItems( (oldItem) => { 
+			item.text = item.post;
+			item.date = new Date(item.date);
+
+			// возвращаем новый массив, чтобы изменилась ссылка и все обновилось
+			return [...oldItem, item]; 
+		} );
+	}
 
 	return (
 		<div className="app">
@@ -33,8 +48,8 @@ function App() {
 				<JournalList>
 					{/* [<Button text='Button 1'></Button>, <Button text='Button 2'></Button>] */}
 
-					{ data.map(el => (
-						<CardButton key={el.id}>
+					{ items.map((el, index) => (
+						<CardButton key={ index }>
 							<JournalItem
 								title={el.title}
 								text={el.text}
@@ -47,7 +62,7 @@ function App() {
 				</JournalList>
 			</LeftPanel>
 			<Body>
-				<JournalForm/>
+				<JournalForm addItem={ addItem }/>
 			</Body>
 		</div>
 	);
