@@ -13,11 +13,13 @@ import LeftPanel from './layouts/LeftPanel/LeftPanel';
 function App() {
 	const INITIAL_DATA = [
 		{
+			id: 1,
 			title: 'Подготовка к обновлению курсов',
 			text: 'Думал, что очень много времени...',
 			date: new Date()
 		},
 		{
+			id: 2,
 			title: 'Поход в горы',
 			text: 'Горные походы открывают удивительные природные ландшафты',
 			date: new Date()
@@ -34,11 +36,21 @@ function App() {
 		setItems( (oldItem) => { 
 			item.text = item.post;
 			item.date = new Date(item.date);
+			item.id = Math.max(...oldItem.map(i => i.id)) + 1;
 
 			// возвращаем новый массив, чтобы изменилась ссылка и все обновилось
 			return [...oldItem, item]; 
 		} );
 	}
+
+	// Сортировка элементов по дате, новые в начале
+	const sortItems = (a, b) => {
+		if (a.date < b.date) {
+			return 1;
+		} else {
+			return -1;
+		}
+	};
 
 	return (
 		<div className="app">
@@ -48,8 +60,8 @@ function App() {
 				<JournalList>
 					{/* [<Button text='Button 1'></Button>, <Button text='Button 2'></Button>] */}
 
-					{ items.map((el, index) => (
-						<CardButton key={ index }>
+					{ items.sort(sortItems).map(el => (
+						<CardButton key={ el.id }>
 							<JournalItem
 								title={el.title}
 								text={el.text}
