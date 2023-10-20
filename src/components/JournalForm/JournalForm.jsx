@@ -6,9 +6,9 @@ function JournalForm({ addItem }) {
 
     // Статус для валидации формы, с первоначальными параметрами
     const [formValidState, setFormValidState] = useState({
-        title: true,
-        post: true,
-        date: true
+        title: undefined,
+        post: undefined,
+        date: undefined
     });
 
     const addJournalItem = (event) => {
@@ -24,27 +24,27 @@ function JournalForm({ addItem }) {
         let isFormValid = true;
 
         if (!formProps.title?.trim().length) {
-            setFormValidState(state => ({ ...state, title: false })); 
+            setFormValidState(state => ({ ...state, title: 'invalid' })); 
             isFormValid = false;
         
         } else {
-            setFormValidState(state => ({ ...state, title: true }));
+            setFormValidState(state => ({ ...state, title: undefined }));
         }
 
         if (!formProps.date) {
-            setFormValidState(state => ({ ...state, date: false })); 
+            setFormValidState(state => ({ ...state, date: 'invalid' })); 
             isFormValid = false;
         
         } else {
-            setFormValidState(state => ({ ...state, date: true }));
+            setFormValidState(state => ({ ...state, date: undefined }));
         }
 
         if (!formProps.post?.trim().length) {
-            setFormValidState(state => ({ ...state, post: false })); 
+            setFormValidState(state => ({ ...state, post: 'invalid' })); 
             isFormValid = false;
         
         } else {
-            setFormValidState(state => ({ ...state, post: true }));
+            setFormValidState(state => ({ ...state, post: undefined }));
         }
 
         // Если форма не валидна не добавляем ничего
@@ -59,19 +59,22 @@ function JournalForm({ addItem }) {
     return (
         <form className='journal-form' onSubmit={addJournalItem}>
             <input type="text" 
+                className={`input ${ formValidState.title }`}
                 name="title" 
-                style={{border: formValidState.title ? undefined : '3px solid red'}}
                 placeholder='Enter title'/>
+
             <input type="date" 
-                style={{border: formValidState.date ? undefined : '3px solid red'}}
+                className={`input ${ formValidState.date }`}
                 name="date"/>
+                
             <input type="text" 
                 name="tag" 
                 placeholder='Enter tag'/>
+
             <textarea name="post" 
                 cols="30" 
                 rows="10" 
-                style={{border: formValidState.post ? undefined : '3px solid red'}}
+                className={`input ${ formValidState.post }`}
                 placeholder='Enter post'></textarea>
             <Button text="Save" />
         </form>
