@@ -4,8 +4,10 @@
     gap: 30px;
 }
 
-.invalid {
+.invalid, .invalid::placeholder {
     border: 1px solid red;
     background: rgb(83, 7, 7);
     color: rgb(255, 182, 182);
 }
+
+.input {}

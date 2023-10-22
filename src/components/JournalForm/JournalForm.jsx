@@ -1,84 +1,92 @@
-import './JournalForm.css';
+import styles from './JournalForm.module.css';
 import Button from '../Button/Button';
 import { useState } from 'react';
 
 function JournalForm({ addItem }) {
 
-    // Статус для валидации формы, с первоначальными параметрами
-    const [formValidState, setFormValidState] = useState({
-        title: undefined,
-        post: undefined,
-        date: undefined
-    });
+	// Статус для валидации формы, с первоначальными параметрами
+	const [formValidState, setFormValidState] = useState({
+		title: '',
+		post: '',
+		date: ''
+	});
 
-    const addJournalItem = (event) => {
-        event.preventDefault();
+	const addJournalItem = (event) => {
+		event.preventDefault();
 
-        // Объект для работы с формой в виде ключ-значение
-        const formData = new FormData(event.target);
+		// Объект для работы с формой в виде ключ-значение
+		const formData = new FormData(event.target);
 
-        // Получаем все значения из формы в виде объекта
-        const formProps = Object.fromEntries(formData);
+		// Получаем все значения из формы в виде объекта
+		const formProps = Object.fromEntries(formData);
         
-        // Валидация полей формы
-        let isFormValid = true;
+		// Валидация полей формы
+		let isFormValid = true;
 
-        if (!formProps.title?.trim().length) {
-            setFormValidState(state => ({ ...state, title: 'invalid' })); 
-            isFormValid = false;
+		if (!formProps.title?.trim().length) {
+			setFormValidState(state => ({ ...state, title: styles.invalid })); 
+			isFormValid = false;
         
-        } else {
-            setFormValidState(state => ({ ...state, title: undefined }));
-        }
+		} else {
+			setFormValidState(state => ({ ...state, title: '' }));
+		}
 
-        if (!formProps.date) {
-            setFormValidState(state => ({ ...state, date: 'invalid' })); 
-            isFormValid = false;
+		if (!formProps.date) {
+			setFormValidState(state => ({ ...state, date: styles.invalid })); 
+			isFormValid = false;
         
-        } else {
-            setFormValidState(state => ({ ...state, date: undefined }));
-        }
+		} else {
+			setFormValidState(state => ({ ...state, date: '' }));
+		}
 
-        if (!formProps.post?.trim().length) {
-            setFormValidState(state => ({ ...state, post: 'invalid' })); 
-            isFormValid = false;
+		if (!formProps.post?.trim().length) {
+			setFormValidState(state => ({ ...state, post: styles.invalid })); 
+			isFormValid = false;
         
-        } else {
-            setFormValidState(state => ({ ...state, post: undefined }));
-        }
+		} else {
+			setFormValidState(state => ({ ...state, post: '' }));
+		}
 
-        // Если форма не валидна не добавляем ничего
-        if (!isFormValid) {
-            return;
-        }
+		// Если форма не валидна не добавляем ничего
+		if (!isFormValid) {
+			return;
+		}
 
-        // Вызываем прокинутую функцию для добавления данных
-        addItem(formProps);
-    };
+		// Вызываем прокинутую функцию для добавления данных
+		addItem(formProps);
+	};
 
-    return (
-        <form className='journal-form' onSubmit={addJournalItem}>
-            <input type="text" 
-                className={`input ${ formValidState.title }`}
-                name="title" 
-                placeholder='Enter title'/>
+	console.log(styles['journal-form']);
 
-            <input type="date" 
-                className={`input ${ formValidState.date }`}
-                name="date"/>
-                
-            <input type="text" 
-                name="tag" 
-                placeholder='Enter tag'/>
+	return (
+		<>
+			<form className={styles['journal-form']} onSubmit={addJournalItem}>
+				<input
+					type="text"
+					className={`${styles.input} ${formValidState.title}`}
+					name="title"
+					placeholder="Enter title"
+				/>
 
-            <textarea name="post" 
-                cols="30" 
-                rows="10" 
-                className={`input ${ formValidState.post }`}
-                placeholder='Enter post'></textarea>
-            <Button text="Save" />
-        </form>
-    );
+				<input
+					type="date"
+					className={`${styles['input']} ${formValidState.date}`}
+					name="date"
+				/>
+
+				<input type="text" name="tag" placeholder="Enter tag" />
+
+				<textarea
+					name="post"
+					cols="30"
+					rows="10"
+					className={`${styles.input} ${formValidState.post}`}
+					placeholder="Enter post"
+				></textarea>
+				<Button text="Save" />
+			</form>
+		</>
+	);
 }
 
 export default JournalForm;
