@@ -1,6 +1,7 @@
 import styles from './JournalForm.module.css';
 import Button from '../Button/Button';
 import { useState } from 'react';
+import cn from 'classnames';
 
 function JournalForm({ addItem }) {
 
@@ -24,27 +25,27 @@ function JournalForm({ addItem }) {
 		let isFormValid = true;
 
 		if (!formProps.title?.trim().length) {
-			setFormValidState(state => ({ ...state, title: styles.invalid })); 
+			setFormValidState(state => ({ ...state, title: false })); 
 			isFormValid = false;
         
 		} else {
-			setFormValidState(state => ({ ...state, title: '' }));
+			setFormValidState(state => ({ ...state, title: true }));
 		}
 
 		if (!formProps.date) {
-			setFormValidState(state => ({ ...state, date: styles.invalid })); 
+			setFormValidState(state => ({ ...state, date: false })); 
 			isFormValid = false;
         
 		} else {
-			setFormValidState(state => ({ ...state, date: '' }));
+			setFormValidState(state => ({ ...state, date: true }));
 		}
 
 		if (!formProps.post?.trim().length) {
-			setFormValidState(state => ({ ...state, post: styles.invalid })); 
+			setFormValidState(state => ({ ...state, post: false })); 
 			isFormValid = false;
         
 		} else {
-			setFormValidState(state => ({ ...state, post: '' }));
+			setFormValidState(state => ({ ...state, post: true }));
 		}
 
 		// Если форма не валидна не добавляем ничего
@@ -56,21 +57,30 @@ function JournalForm({ addItem }) {
 		addItem(formProps);
 	};
 
-	console.log(styles['journal-form']);
 
 	return (
 		<>
 			<form className={styles['journal-form']} onSubmit={addJournalItem}>
 				<input
 					type="text"
-					className={`${styles.input} ${formValidState.title}`}
+					className={ cn(
+						styles.input, 
+						{ 
+							[ styles['invalid'] ]: !formValidState.title 
+						}
+					)}
 					name="title"
 					placeholder="Enter title"
 				/>
 
 				<input
 					type="date"
-					className={`${styles['input']} ${formValidState.date}`}
+					className={ cn(
+						styles['input'],  
+						{
+							[ styles['invalid'] ]: !formValidState.date
+						}
+					)}
 					name="date"
 				/>
 
@@ -80,7 +90,12 @@ function JournalForm({ addItem }) {
 					name="post"
 					cols="30"
 					rows="10"
-					className={`${styles.input} ${formValidState.post}`}
+					className={ cn(
+						styles.input, 
+						{
+							[ styles['invalid'] ]: !formValidState.post
+						}
+					)}
 					placeholder="Enter post"
 				></textarea>
 				<Button text="Save" />
@@ -90,3 +105,5 @@ function JournalForm({ addItem }) {
 }
 
 export default JournalForm;
+
+cn(styles['input'], styles.invalid);
