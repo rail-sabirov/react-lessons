@@ -1,16 +1,17 @@
 import styles from './JournalForm.module.css';
 import Button from '../Button/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import cn from 'classnames';
 
 function JournalForm({ addItem }) {
-
-	// Статус для валидации формы, с первоначальными параметрами
-	const [formValidState, setFormValidState] = useState({
+	const INITIAL_STATE = {
 		title: true,
 		post: true,
 		date: true
-	});
+	};
+
+	// Статус для валидации формы, с первоначальными параметрами
+	const [formValidState, setFormValidState] = useState(INITIAL_STATE);
 
 	const addJournalItem = (event) => {
 		event.preventDefault();
@@ -57,6 +58,23 @@ function JournalForm({ addItem }) {
 		addItem(formProps);
 	};
 
+	// Таймер на возврат форм из красного цвета после ошибки
+	useEffect(() => {
+		let timerId;
+
+		if(!formValidState.date || !formValidState.post || !formValidState.date) {
+			
+			// Возвращаем на началные настройки, при - return запуститься один раз
+			timerId = setTimeout(() => {
+				setFormValidState(INITIAL_STATE);
+			}, 2000);
+		}
+
+		// Очистка эффекта, остановка таймера и остановка эффетка при множественном вызове
+		return () => {
+			clearTimeout(timerId);
+		};
+	}, [ formValidState ]);
 
 	return (
 		<>
