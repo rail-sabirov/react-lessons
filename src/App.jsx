@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import Button from './components/Button/Button';
 import CardButton from './components/CardButton/CardButton';
@@ -12,23 +12,30 @@ import LeftPanel from './layouts/LeftPanel/LeftPanel';
 
 
 function App() {
-	const INITIAL_DATA = [
-		// {
-		// 	id: 1,
-		// 	title: 'Подготовка к обновлению курсов',
-		// 	text: 'Думал, что очень много времени...',
-		// 	date: new Date()
-		// },
-		// {
-		// 	id: 2,
-		// 	title: 'Поход в горы',
-		// 	text: 'Горные походы открывают удивительные природные ландшафты',
-		// 	date: new Date()
-		// }
-	];
-
 	// Стейт для изменений в массиве
-	const [items, setItems] = useState(INITIAL_DATA);
+	const [items, setItems] = useState([]);
+
+	// Получаем данные из LocalStorage в виде JSON
+	useEffect(() => {
+		const data = JSON.parse(localStorage.getItem('data'));
+
+		if(data) {
+			setItems(data.map( item => ({
+				...item,
+				date: new Date(item.date)
+			}))
+			);
+		}
+	}, []);
+
+	// сайд эффект с подпиской, сохраняем данные в LocalStorage
+	useEffect(() => {
+		if(items.length) {
+			localStorage.setItem('data', JSON.stringify(items));
+			console.log('data is saved to localStorage!')
+		}
+	}, [items]);
+
 
 	// Функция для добавления новой записи в журнал
 	const addItem = (item) => {

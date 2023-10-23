@@ -65,6 +65,7 @@ function JournalForm({ addItem }) {
 					type="text"
 					className={ cn(
 						styles['input-title'], 
+						styles['input'],
 						{ 
 							[ styles['invalid'] ]: !formValidState.title 
 						}
