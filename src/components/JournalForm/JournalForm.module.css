@@ -4,12 +4,49 @@
     gap: 30px;
 }
 
+.input {
+    border: none;
+    background: none;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    font-family: 'Source Sans 3', sans-serif;
+    border-bottom: 1px solid var(--label-color);
+    width: 100%;
+}
+
+.input-title {
+    border: none;
+    background: none;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    font-family: 'Source Sans 3', sans-serif;
+    
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 100px;
+}
+
+.form-label > img {
+    width: 20px;
+    vertical-align: text-top;
+}
+
 .invalid, .invalid::placeholder {
     border: 1px solid red;
     background: rgb(83, 7, 7);
     color: rgb(255, 182, 182);
 }
-
-.input {}
-
-.aaa {}

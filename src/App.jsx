@@ -10,6 +10,7 @@ import JournalList from './components/JournalList/JournalList';
 import Body from './layouts/Body/Body';
 import LeftPanel from './layouts/LeftPanel/LeftPanel';
 
+
 function App() {
 	const INITIAL_DATA = [
 		// {

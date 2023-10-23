@@ -7,9 +7,9 @@ function JournalForm({ addItem }) {
 
 	// Статус для валидации формы, с первоначальными параметрами
 	const [formValidState, setFormValidState] = useState({
-		title: '',
-		post: '',
-		date: ''
+		title: true,
+		post: true,
+		date: true
 	});
 
 	const addJournalItem = (event) => {
@@ -64,7 +64,7 @@ function JournalForm({ addItem }) {
 				<input
 					type="text"
 					className={ cn(
-						styles.input, 
+						styles['input-title'], 
 						{ 
 							[ styles['invalid'] ]: !formValidState.title 
 						}
@@ -73,18 +73,30 @@ function JournalForm({ addItem }) {
 					placeholder="Enter title"
 				/>
 
-				<input
-					type="date"
-					className={ cn(
-						styles['input'],  
-						{
-							[ styles['invalid'] ]: !formValidState.date
-						}
-					)}
-					name="date"
-				/>
+				<div className={ styles['form-row']}>
+					<label htmlFor="date" className={ styles['form-label'] }>
+						<img src='/calendar.svg' alt="Calendar icon" />
+						<span>Data</span>
+					</label>
+				
+					<input
+						type="date"
+						id='date'
+						className={ cn( styles['input'],  { [ styles['invalid'] ]: !formValidState.date }) }
+						name="date"
+					/>
+				
+				</div>
 
-				<input type="text" name="tag" placeholder="Enter tag" />
+				<div className={ styles['form-row']}>
+					<label htmlFor="tag" className={ styles['form-label'] }>
+						<img src='/folder.svg' alt="Folder icon" />
+						<span>Tags</span>
+					</label>
+
+					<input type="text" id="tag" className={ cn(styles['input']) } name="tag" placeholder="Enter tag" />
+				</div>
+				
 
 				<textarea
 					name="post"
