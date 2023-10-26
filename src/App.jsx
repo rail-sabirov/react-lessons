@@ -15,7 +15,7 @@ function App() {
 	// Стейт для изменений в массиве
 	const [items, setItems] = useState([]);
 
-	// Получаем данные из LocalStorage в виде JSON
+	// Получаем данные из LocalStorage в виде JSON один раз при инициализации компонента
 	useEffect(() => {
 		const data = JSON.parse(localStorage.getItem('data'));
 
@@ -28,7 +28,7 @@ function App() {
 		}
 	}, []);
 
-	// сайд эффект с подпиской, сохраняем данные в LocalStorage
+	// сайд эффект с подпиской (когда меняется item), сохраняем данные в LocalStorage
 	useEffect(() => {
 		if(items.length) {
 			localStorage.setItem('data', JSON.stringify(items));

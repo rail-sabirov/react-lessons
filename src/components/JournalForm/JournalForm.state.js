@@ -20,26 +20,26 @@ export const INITIAL_STATE = {
 }
 
 // Фукнция обработчик команд от dispatchForm, вызывается автоматом из useReduce
-export function fromReducer(oldState, action) {
-    const formData = action.payload;
+export function fromReducer(curState, action) {
     // Проеверяем на типы
     switch(action.type) {
         // Сбрасываем нашу валидность
         case 'RESET_VALIDITY': 
-            return { ...oldState, isValid: INITIAL_STATE.isValid };
+            return { ...curState, isValid: INITIAL_STATE.isValid };
         
-        // Наполнение и отправка формы, 
-        // payload - будет содержать нашу форму при ее submitе
+        // Наполнение и отправка формы
         case 'SUBMIT': {
+            const curFormData = curState.values;
+
             // Валидация значений обязательных к заполненнию полей из формы 
             // тут же преобразуем из в boolean
-            const postValidity = !!formData.post?.trim().length;
-            const titleValidity = !!formData.title?.trim().length;
-            const dateValidity = !!formData.date;
+            const postValidity = !!curFormData.post?.trim().length;
+            const titleValidity = !!curFormData.title?.trim().length;
+            const dateValidity = !!curFormData.date;
 
             return {
                 // Данные полей формы
-                values: formData,
+                values: curFormData,
 
                 // результаты проверки каждого поля, для подсветки красным
                 isValid: {
@@ -55,6 +55,24 @@ export function fromReducer(oldState, action) {
 
         // Очистка полей формы, после добавления данных в список
         case 'CLEAR': 
-            return { ...state, values: INITIAL_STATE.values };
+            return { ...curState, values: INITIAL_STATE.values };
+
+        // События при изменении полей ввода формы    
+        case 'SET_VALUE': 
+            let out = { 
+                // Текущее значения
+                ...curState, 
+
+                // Переопределяем значение values в статусах INITIAL_STATE
+                values: {
+                    // все ключи и значения из текущего статуса
+                    ...curState.values,
+
+                    // переопределяем полученными ключами и значениями из поля формы при изменении
+                    ...action.payload
+                }
+            };
+
+            return out;
     }
 }

@@ -63,6 +63,12 @@ function JournalForm({ addItem }) {
 		dispatchForm({ type: 'SUBMIT', payload: formProps })
 	};
 
+	// Функция для контроля изменений полей формы - для избавления от submit
+	const onChangeFormFields = (event) => {
+		const { name, value } = event.target;
+		dispatchForm({ type: 'SET_VALUE', payload: { [name]: value }});
+	};
+
 	return (
 		<form className={styles['journal-form']} onSubmit={addJournalItem}>
 			<input
@@ -75,6 +81,8 @@ function JournalForm({ addItem }) {
 					}
 				)}
 				name="title"
+				value={ values.title }
+				onChange={ onChangeFormFields }
 				placeholder="Enter title"
 			/>
 
@@ -89,6 +97,8 @@ function JournalForm({ addItem }) {
 					id='date'
 					className={ cn( styles['input'],  { [ styles['invalid'] ]: !isValid.date }) }
 					name="date"
+					value={ values.date }
+					onChange={ onChangeFormFields }
 				/>
 			
 			</div>
@@ -101,7 +111,13 @@ function JournalForm({ addItem }) {
 					<span>Tags</span>
 				</label>
 
-				<input type="text" id="tag" className={ cn(styles['input']) } name="tag" placeholder="Enter tag" />
+				<input type="text" 
+					id="tag" 
+					className={ cn(styles['input']) } 
+					name="tag" 
+					value={ values.tag }
+					onChange={ onChangeFormFields }
+					placeholder="Enter tag" />
 			</div>
 			
 
@@ -116,6 +132,8 @@ function JournalForm({ addItem }) {
 					}
 				)}
 				placeholder="Enter post"
+				value={ values.post }
+				onChange={ onChangeFormFields }
 			></textarea>
 			<Button text="Save" />
 		</form>
