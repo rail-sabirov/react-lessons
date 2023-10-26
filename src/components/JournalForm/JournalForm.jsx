@@ -1,18 +1,55 @@
-import styles from './JournalForm.module.css';
-import Button from '../Button/Button';
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import cn from 'classnames';
 
+import styles from './JournalForm.module.css';
+import Button from '../Button/Button';
+import { fromReducer, INITIAL_STATE } from './JournalForm.state';
+
 function JournalForm({ addItem }) {
-	const INITIAL_STATE = {
-		title: true,
-		post: true,
-		date: true
-	};
 
-	// Статус для валидации формы, с первоначальными параметрами
-	const [formValidState, setFormValidState] = useState(INITIAL_STATE);
+	// Используя useReducer
+	const [formState, dispatchForm] = useReducer(fromReducer, INITIAL_STATE);
 
+	// Диструктурируем наш стейт на составляющие, вынимаем isValid
+	const { isValid, isFormReadyToSubmit, values } = formState;
+
+	// -- Таймер на возврат форм из красного цвета после ошибки
+	useEffect(() => {
+		let timerId;
+
+		if(!isValid.date || !isValid.post || !isValid.date) {
+			
+			// Возвращаем на началные настройки, при - return запуститься один раз
+			timerId = setTimeout(() => {
+				console.log('Clear state');
+
+				// Отправляем, что нам нужно сделать вот такое событие
+				dispatchForm({ type: 'RESET_VALIDITY' })
+			}, 2000);
+		}
+
+		// Очистка эффекта, остановка таймера и остановка эффетка при множественном вызове
+		return () => {
+			clearTimeout(timerId);
+		};
+	}, 
+	// Подписываемся на изменение валидности полей
+	[ isValid ]);
+
+
+	// -- Если форма готова и проверяна, то можно отправлять вызовом функции addItem
+	useEffect(() => {
+		if (isFormReadyToSubmit === true) {
+			// Вызываем прокинутую в компонент функцию для добавления данных
+			addItem(values);
+
+			// Отправляем сигнал для очистки полей формы
+			dispatchForm({ type: 'CLEAR' });
+		}
+	}, [ isFormReadyToSubmit ]);
+
+
+	// Добавление записи в журнал
 	const addJournalItem = (event) => {
 		event.preventDefault();
 
@@ -22,119 +59,67 @@ function JournalForm({ addItem }) {
 		// Получаем все значения из формы в виде объекта
 		const formProps = Object.fromEntries(formData);
         
-		// Валидация полей формы
-		let isFormValid = true;
-
-		if (!formProps.title?.trim().length) {
-			setFormValidState(state => ({ ...state, title: false })); 
-			isFormValid = false;
-        
-		} else {
-			setFormValidState(state => ({ ...state, title: true }));
-		}
-
-		if (!formProps.date) {
-			setFormValidState(state => ({ ...state, date: false })); 
-			isFormValid = false;
-        
-		} else {
-			setFormValidState(state => ({ ...state, date: true }));
-		}
-
-		if (!formProps.post?.trim().length) {
-			setFormValidState(state => ({ ...state, post: false })); 
-			isFormValid = false;
-        
-		} else {
-			setFormValidState(state => ({ ...state, post: true }));
-		}
-
-		// Если форма не валидна не добавляем ничего
-		if (!isFormValid) {
-			return;
-		}
-
-		// Вызываем прокинутую функцию для добавления данных
-		addItem(formProps);
+		// Посылаем флаг "Отправляй" и данные формы
+		dispatchForm({ type: 'SUBMIT', payload: formProps })
 	};
 
-	// Таймер на возврат форм из красного цвета после ошибки
-	useEffect(() => {
-		let timerId;
-
-		if(!formValidState.date || !formValidState.post || !formValidState.date) {
-			
-			// Возвращаем на началные настройки, при - return запуститься один раз
-			timerId = setTimeout(() => {
-				setFormValidState(INITIAL_STATE);
-			}, 2000);
-		}
-
-		// Очистка эффекта, остановка таймера и остановка эффетка при множественном вызове
-		return () => {
-			clearTimeout(timerId);
-		};
-	}, [ formValidState ]);
-
 	return (
-		<>
-			<form className={styles['journal-form']} onSubmit={addJournalItem}>
+		<form className={styles['journal-form']} onSubmit={addJournalItem}>
+			<input
+				type="text"
+				className={ cn(
+					styles['input-title'], 
+					styles['input'],
+					{ 
+						[ styles['invalid'] ]: !isValid.title 
+					}
+				)}
+				name="title"
+				placeholder="Enter title"
+			/>
+
+			<div className={ styles['form-row']}>
+				<label htmlFor="date" className={ styles['form-label'] }>
+					<img src='/calendar.svg' alt="Calendar icon" />
+					<span>Data</span>
+				</label>
+			
 				<input
-					type="text"
-					className={ cn(
-						styles['input-title'], 
-						styles['input'],
-						{ 
-							[ styles['invalid'] ]: !formValidState.title 
-						}
-					)}
-					name="title"
-					placeholder="Enter title"
+					type="date"
+					id='date'
+					className={ cn( styles['input'],  { [ styles['invalid'] ]: !isValid.date }) }
+					name="date"
 				/>
+			
+			</div>
 
-				<div className={ styles['form-row']}>
-					<label htmlFor="date" className={ styles['form-label'] }>
-						<img src='/calendar.svg' alt="Calendar icon" />
-						<span>Data</span>
-					</label>
-				
-					<input
-						type="date"
-						id='date'
-						className={ cn( styles['input'],  { [ styles['invalid'] ]: !formValidState.date }) }
-						name="date"
-					/>
-				
-				</div>
+			<div className={ styles['form-row']}>
+				<label 
+					htmlFor="tag" 
+					className={ styles['form-label'] }>
+					<img src='/folder.svg' alt="Folder icon" />
+					<span>Tags</span>
+				</label>
 
-				<div className={ styles['form-row']}>
-					<label htmlFor="tag" className={ styles['form-label'] }>
-						<img src='/folder.svg' alt="Folder icon" />
-						<span>Tags</span>
-					</label>
+				<input type="text" id="tag" className={ cn(styles['input']) } name="tag" placeholder="Enter tag" />
+			</div>
+			
 
-					<input type="text" id="tag" className={ cn(styles['input']) } name="tag" placeholder="Enter tag" />
-				</div>
-				
-
-				<textarea
-					name="post"
-					cols="30"
-					rows="10"
-					className={ cn(
-						styles.input, 
-						{
-							[ styles['invalid'] ]: !formValidState.post
-						}
-					)}
-					placeholder="Enter post"
-				></textarea>
-				<Button text="Save" />
-			</form>
-		</>
+			<textarea
+				name="post"
+				cols="30"
+				rows="10"
+				className={ cn(
+					styles.input, 
+					{
+						[ styles['invalid'] ]: !isValid.post
+					}
+				)}
+				placeholder="Enter post"
+			></textarea>
+			<Button text="Save" />
+		</form>
 	);
 }
 
 export default JournalForm;
-
-cn(styles['input'], styles.invalid);
