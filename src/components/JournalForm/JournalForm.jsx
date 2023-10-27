@@ -4,6 +4,7 @@ import cn from 'classnames';
 import styles from './JournalForm.module.css';
 import Button from '../Button/Button';
 import { fromReducer, INITIAL_STATE } from './JournalForm.state';
+import Input from '../Input/Input';
 
 function JournalForm({ addItem }) {
 
@@ -96,16 +97,11 @@ function JournalForm({ addItem }) {
 
 	return (
 		<form className={styles['journal-form']} onSubmit={addJournalItem}>
-			<input
+			<Input
+				appearance="title"
+				isValid = { isValid.title }
 				name="title"
 				type="text"
-				className={ cn(
-					styles['input-title'], 
-					styles['input'],
-					{ 
-						[ styles['invalid'] ]: !isValid.title 
-					}
-				)}
 				ref={ titleRef }
 				value={ values.title }
 				onChange={ onChangeFormFields }
@@ -118,13 +114,13 @@ function JournalForm({ addItem }) {
 					<span>Data</span>
 				</label>
 			
-				<input
+				<Input
 					type="date"
+					isValid = { isValid.date }
 					ref={ dateRef }
 					id='date'
-					className={ cn( styles['input'],  { [ styles['invalid'] ]: !isValid.date }) }
 					name="date"
-					value={ values.date }
+					value={ (values.date || new Date) }
 					onChange={ onChangeFormFields }
 				/>
 			
@@ -138,9 +134,8 @@ function JournalForm({ addItem }) {
 					<span>Tags</span>
 				</label>
 
-				<input type="text" 
+				<Input type="text" 
 					id="tag" 
-					className={ cn(styles['input']) } 
 					name="tag" 
 					value={ values.tag }
 					onChange={ onChangeFormFields }
