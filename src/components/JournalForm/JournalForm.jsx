@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import cn from 'classnames';
 
 import styles from './JournalForm.module.css';
@@ -13,11 +13,18 @@ function JournalForm({ addItem }) {
 	// Диструктурируем наш стейт на составляющие, вынимаем isValid
 	const { isValid, isFormReadyToSubmit, values } = formState;
 
+	// Ссылочная константа
+	const titleRef = useRef();
+	const dateRef = useRef();
+	const postRef = useRef();
+
 	// -- Таймер на возврат форм из красного цвета после ошибки
 	useEffect(() => {
 		let timerId;
 
 		if(!isValid.date || !isValid.post || !isValid.date) {
+			// Перемещение фокуса на первый элемент с ошибкой
+			focusError(isValid);
 			
 			// Возвращаем на началные настройки, при - return запуститься один раз
 			timerId = setTimeout(() => {
@@ -69,9 +76,28 @@ function JournalForm({ addItem }) {
 		dispatchForm({ type: 'SET_VALUE', payload: { [name]: value }});
 	};
 
+	// Функция для перемещения форкуса на вервый элемент с ошибкой
+	const focusError = (isValid) => {
+		switch(true) {
+			case !isValid.title: 
+				titleRef.current.focus();
+				break;
+
+			case !isValid.date: 
+				dateRef.current.focus();
+				break;
+
+			case !isValid.post: 
+				postRef.current.focus();
+				break;
+
+		}
+	}
+
 	return (
 		<form className={styles['journal-form']} onSubmit={addJournalItem}>
 			<input
+				name="title"
 				type="text"
 				className={ cn(
 					styles['input-title'], 
@@ -80,7 +106,7 @@ function JournalForm({ addItem }) {
 						[ styles['invalid'] ]: !isValid.title 
 					}
 				)}
-				name="title"
+				ref={ titleRef }
 				value={ values.title }
 				onChange={ onChangeFormFields }
 				placeholder="Enter title"
@@ -94,6 +120,7 @@ function JournalForm({ addItem }) {
 			
 				<input
 					type="date"
+					ref={ dateRef }
 					id='date'
 					className={ cn( styles['input'],  { [ styles['invalid'] ]: !isValid.date }) }
 					name="date"
@@ -123,6 +150,7 @@ function JournalForm({ addItem }) {
 
 			<textarea
 				name="post"
+				ref={ postRef }
 				cols="30"
 				rows="10"
 				className={ cn(
