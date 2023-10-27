@@ -55,7 +55,7 @@ export function fromReducer(curState, action) {
 
         // Очистка полей формы, после добавления данных в список
         case 'CLEAR': 
-            return { ...curState, values: INITIAL_STATE.values };
+            return { ...curState, values: INITIAL_STATE.values, isFormReadyToSubmit: false };
 
         // События при изменении полей ввода формы    
         case 'SET_VALUE': 

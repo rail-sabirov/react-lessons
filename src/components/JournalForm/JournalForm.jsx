@@ -46,7 +46,7 @@ function JournalForm({ addItem }) {
 			// Отправляем сигнал для очистки полей формы
 			dispatchForm({ type: 'CLEAR' });
 		}
-	}, [ isFormReadyToSubmit ]);
+	}, [ isFormReadyToSubmit, values, addItem ]);
 
 
 	// Добавление записи в журнал
