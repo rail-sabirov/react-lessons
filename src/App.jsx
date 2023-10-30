@@ -1,63 +1,57 @@
-import { useEffect, useState } from 'react';
 import './App.css';
-import Button from './components/Button/Button';
-import CardButton from './components/CardButton/CardButton';
 import Header from './components/Header/Header';
 import JournalAddButton from './components/JournalAddButton/JournalAddButton';
 import JournalForm from './components/JournalForm/JournalForm';
-import JournalItem from './components/JournalItem/JournalItem';
 import JournalList from './components/JournalList/JournalList';
 import Body from './layouts/Body/Body';
 import LeftPanel from './layouts/LeftPanel/LeftPanel';
+import { useLocalStorage } from './hooks/useLocalStorage.hook';
 
 
 function App() {
-	// Стейт для изменений в массиве
-	const [items, setItems] = useState([]);
+	// Хук для чтения и изменения в localStorage
+	const [items, saveItems] = useLocalStorage('data');
 
-	// Получаем данные из LocalStorage в виде JSON один раз при инициализации компонента
-	useEffect(() => {
-		const data = JSON.parse(localStorage.getItem('data'));
-
-		if(data) {
-			setItems(data.map( item => ({
-				...item,
-				date: new Date(item.date)
-			}))
-			);
+	// Перебор массива для нормализации даты
+	function mapItems(items) {
+		if (!items) {
+			return [];
 		}
-	}, []);
 
-	// сайд эффект с подпиской (когда меняется item), сохраняем данные в LocalStorage
-	useEffect(() => {
-		if(items.length) {
-			localStorage.setItem('data', JSON.stringify(items));
-			console.log('data is saved to localStorage!')
-		}
-	}, [items]);
-
-
-	// Функция для добавления новой записи в журнал
-	const addItem = (item) => {
-		// Добавляем новую запись в журнал используюя 
-		// строковую функцию получаем старое значение
-		setItems( (oldItem) => { 
-			const maxId = oldItem.length > 0 ? Math.max(...oldItem.map(i => i.id)) : 0;
-			item.text = item.post;
-			item.date = new Date(item.date);
-			item.id =  maxId + 1;
-
-			// возвращаем новый массив, чтобы изменилась ссылка и все обновилось
-			return [...oldItem, item]; 
-		} );
+		return items.map(i => ({
+			...i,
+			date: new Date(i.date)
+		}));
 	}
+
+	function prepareDate(date) {
+		const [dateYear, dateMonth, dateDay] = date.split('-').map(Number);
+
+		return new Date(dateYear, dateMonth - 1, dateDay);
+	}
+
+	// Функция для добавления новой записи в localStorage
+	const addItem = (newItem) => {
+		
+		saveItems([
+			...mapItems(items), 
+			{
+				post: newItem.post,
+				title: newItem.title,
+				date: prepareDate(newItem.date),
+				id: !!items && items.length > 0 
+					? Math.max(...items.map(i => i.id)) + 1 
+					: 1
+			}
+		]);
+	};
 
 	return (
 		<div className="app">
 			<LeftPanel>
 				<Header />
 				<JournalAddButton/>
-				<JournalList items={ items }/>
+				<JournalList items={ mapItems(items) }/>
 			</LeftPanel>
 
 			<Body>
