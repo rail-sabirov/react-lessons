@@ -48,6 +48,7 @@ function App() {
 	};
 
 	return (
+		<>
 		<UserContext.Provider value={ {userId: 1 } }>
 			<div className="app">
 				<LeftPanel>
@@ -61,6 +62,9 @@ function App() {
 				</Body>
 			</div>
 		</UserContext.Provider>
+		
+		<JournalForm addItem={ addItem }/>
+		</>
 	);
 }
 
