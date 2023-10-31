@@ -7,6 +7,7 @@ import { fromReducer, INITIAL_STATE } from './JournalForm.state';
 import Input from '../Input/Input';
 import { UserContext } from '../../context/user.context';
 
+
 function JournalForm({ addItem }) {
 
 	// Используя useReducer
@@ -22,6 +23,7 @@ function JournalForm({ addItem }) {
 
 	// Работа с контекстом
 	const { userId } = useContext(UserContext);
+	
 
 	// -- Таймер на возврат форм из красного цвета после ошибки
 	useEffect(() => {
