@@ -6,16 +6,12 @@ import JournalList from './components/JournalList/JournalList';
 import Body from './layouts/Body/Body';
 import LeftPanel from './layouts/LeftPanel/LeftPanel';
 import { useLocalStorage } from './hooks/useLocalStorage.hook';
-import { UserContext } from './context/user.context';
-import { useState } from 'react';
+import { UserContextProvider } from './context/user.context';
 
 
 function App() {
 	// Хук для чтения и изменения в localStorage
 	const [items, saveItems] = useLocalStorage('data');
-
-	// Состояние для переменной из контекста, для последующего его изменения
-	const [userId, setUserId] = useState(1);
 
 	// Перебор массива для нормализации даты
 	function mapItems(items) {
@@ -52,8 +48,7 @@ function App() {
 	};
 
 	return (
-		<>
-		<UserContext.Provider value={ { userId, setUserId } }>
+		<UserContextProvider>
 			<div className="app">
 				<LeftPanel>
 					<Header />
@@ -65,10 +60,7 @@ function App() {
 					<JournalForm addItem={ addItem }/>
 				</Body>
 			</div>
-		</UserContext.Provider>
-
-		
-		</>
+		</UserContextProvider>
 	);
 }
 
