@@ -1,8 +1,14 @@
+import { useContext } from 'react';
 import CardButton from '../CardButton/CardButton';
 import JournalItem from '../JournalItem/JournalItem';
 import './JournalList.css';
+import { UserContext } from '../../context/user.context';
 
 function JournalList({ items }) {
+	// Получаем из контекста userId - для фильтрации вывода постов по пользователю
+	const { userId } = useContext(UserContext);
+
+
 	// Сортировка элементов по дате, новые в начале
 	const sortItems = (a, b) => {
 		if (a.date < b.date) {
@@ -18,15 +24,19 @@ function JournalList({ items }) {
 		
 		return (
 			<div className="journal-list">
-				{ items.sort(sortItems).map(el => (
-					<CardButton key={ el.id }>
-						<JournalItem
-							title={el.title}	
-							text={el.post}
-							date={el.date}
-						/>
-					</CardButton>
-				)) }
+				{ items
+					.filter(el => el.userId === userId)
+					.sort(sortItems)
+					.map(el => (
+						<CardButton key={ el.id }>
+							<JournalItem
+								title={el.title}	
+								text={el.post}
+								date={el.date}
+							/>
+						</CardButton>
+					)) 
+				}
 			</div>
 		);
 	}

@@ -54,6 +54,11 @@ function JournalForm({ addItem }) {
 	// -- Если форма готова и проверяна, то можно отправлять вызовом функции addItem
 	useEffect(() => {
 		if (isFormReadyToSubmit === true) {
+			// Добавляем userId если его нет
+			if (!values.userId) {
+				values.userId = userId;
+			}
+
 			// Вызываем прокинутую в компонент функцию для добавления данных
 			addItem(values);
 
@@ -61,6 +66,19 @@ function JournalForm({ addItem }) {
 			dispatchForm({ type: 'CLEAR' });
 		}
 	}, [ isFormReadyToSubmit, values, addItem ]);
+
+	// -- Еффект который будет тригерится на изменение userId
+	useEffect(() => {
+		// Посылаем сигнал на обновление данных формы, если сменился пользователь
+		dispatchForm(
+			{
+				type: 'SET_VALUE',
+				payload: {
+					userId: userId // -> можно просто userId
+				}
+			}
+		); 
+	}, [ userId ]);
 
 
 	// Добавление записи в журнал
@@ -72,7 +90,7 @@ function JournalForm({ addItem }) {
 
 		// Получаем все значения из формы в виде объекта
 		const formProps = Object.fromEntries(formData);
-        
+
 		// Посылаем флаг "Отправляй" и данные формы
 		dispatchForm({ type: 'SUBMIT', payload: formProps })
 	};

@@ -13,6 +13,13 @@ function App() {
 	// Хук для чтения и изменения в localStorage
 	const [items, saveItems] = useLocalStorage('data');
 
+	// Корректировка даты
+	function prepareDate(date) {
+		const [dateYear, dateMonth, dateDay] = date.split('-').map(Number);
+
+		return new Date(dateYear, dateMonth - 1, dateDay);
+	}
+
 	// Перебор массива для нормализации даты
 	function mapItems(items) {
 		if (!items) {
@@ -25,20 +32,13 @@ function App() {
 		}));
 	}
 
-	function prepareDate(date) {
-		const [dateYear, dateMonth, dateDay] = date.split('-').map(Number);
-
-		return new Date(dateYear, dateMonth - 1, dateDay);
-	}
-
 	// Функция для добавления новой записи в localStorage
 	const addItem = (newItem) => {
 		
 		saveItems([
 			...mapItems(items), 
 			{
-				post: newItem.post,
-				title: newItem.title,
+				...newItem,
 				date: prepareDate(newItem.date),
 				id: !!items && items.length > 0 
 					? Math.max(...items.map(i => i.id)) + 1 
