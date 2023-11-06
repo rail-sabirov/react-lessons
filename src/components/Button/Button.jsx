@@ -1,11 +1,11 @@
 import './Button.css';
 
-function Button({ text, onClickHandlerFunction }) {
+function Button({ onClick, children }) {
 	return (
 		<button 
 			className='button accent' 
-			onClick={ onClickHandlerFunction }>
-				{ text }
+			onClick={ onClick }>
+				{ children }
 		</button>
 	);
 }

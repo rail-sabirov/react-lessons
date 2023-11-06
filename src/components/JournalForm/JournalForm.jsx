@@ -183,7 +183,7 @@ function JournalForm({ addItem }) {
 				value={ values.post }
 				onChange={ onChangeFormFields }
 			></textarea>
-			<Button text="Save" />
+			<Button >Save</Button>
 		</form>
 
 	);
