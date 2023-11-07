@@ -35,7 +35,6 @@ function JournalForm({ addItem }) {
 			
 			// Возвращаем на началные настройки, при - return запуститься один раз
 			timerId = setTimeout(() => {
-				console.log('Clear state');
 
 				// Отправляем, что нам нужно сделать вот такое событие
 				dispatchForm({ type: 'RESET_VALIDITY' })

@@ -32,8 +32,6 @@ function App() {
 		}));
 	}
 
-console.log('--App--');
-
 	// Функция для добавления новой записи в localStorage
 	const addItem = (newItem) => {
 		
