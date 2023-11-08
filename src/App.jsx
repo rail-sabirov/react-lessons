@@ -9,21 +9,21 @@ import { useLocalStorage } from './hooks/useLocalStorage.hook';
 import { UserContextProvider } from './context/user.context';
 import { useState } from 'react';
 
+// Корректировка даты
+export function prepareDate(date) {
+	if(date instanceof Date) {
+		return date;
+	} 
+
+	const [dateYear, dateMonth, dateDay] = date.split('-').map(Number);
+
+	return new Date(dateYear, dateMonth - 1, dateDay);
+}
+
 
 function App() {
 	// Хук для чтения и изменения в localStorage
 	const [items, saveItems] = useLocalStorage('data');
-
-	// Корректировка даты
-	function prepareDate(date) {
-		if(date instanceof Date) {
-			return date;
-		} 
-
-		const [dateYear, dateMonth, dateDay] = date.split('-').map(Number);
-
-		return new Date(dateYear, dateMonth - 1, dateDay);
-	}
 
 	// Перебор массива для нормализации даты
 	function mapItems(items) {
@@ -80,6 +80,14 @@ function App() {
 	// Для редактирования выбранного элемента
 	const [selectedPostData, setSelectedPostData] = useState({});
 
+	const deleteItem = (id) => {
+		// Сохраняем посты в LocalStorage без поста с id
+		saveItems([...items.filter(i => i.id !== id)])
+
+		// Обнуляем выбранный пост, после удаления
+		setSelectedPostData({});
+	};
+
 	return (
 		<UserContextProvider>
 			<div className="app">
@@ -94,6 +102,7 @@ function App() {
 				<Body>
 					<JournalForm 
 						addItem={ addItem }
+						onDelete={ deleteItem }
 						selectedPostData={ selectedPostData }/>
 				</Body>
 			</div>

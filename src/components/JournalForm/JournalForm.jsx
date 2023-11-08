@@ -6,9 +6,10 @@ import Button from '../Button/Button';
 import { fromReducer, INITIAL_STATE } from './JournalForm.state';
 import Input from '../Input/Input';
 import { UserContext } from '../../context/user.context';
+import { prepareDate } from '../../App';
 
 
-function JournalForm({ addItem, selectedPostData }) {
+function JournalForm({ addItem, selectedPostData, onDelete }) {
 
 	// Используя useReducer
 	const [formState, dispatchForm] = useReducer(fromReducer, INITIAL_STATE);
@@ -129,9 +130,21 @@ function JournalForm({ addItem, selectedPostData }) {
 		}
 	}
 
+	// Уделение поста и очищение формы
+	const deletePost = (id) => {
+		// Вызываем переданную функцию удаления из родительского компонента
+		onDelete(id);
+
+		// Очищаем форму
+		dispatchForm({ type: 'CLEAR'});
+
+		// Устанавливаем текущего автора / пользователя
+		dispatchForm({ type: 'SET_VALUE', payload: { userId }});
+	}
+
 	return (
 		<form className={styles['journal-form']} onSubmit={addJournalItem}>
-			<p>User id: { userId }</p>
+			<div className={ styles['form-row']}>
 			<Input
 				appearance="title"
 				isValid = { isValid.title }
@@ -142,6 +155,15 @@ function JournalForm({ addItem, selectedPostData }) {
 				onChange={ onChangeFormFields }
 				placeholder="Enter title"
 			/>
+			{ selectedPostData.id && 
+			    <Button 
+					onClick={ () => deletePost(selectedPostData.id) } 
+					className={ styles['post-remove-button'] } 
+					alt="Remove Post">
+					<img src="./remove_icon.svg" alt="remove icon" />
+				</Button>
+			}
+			</div>
 
 			<div className={ styles['form-row']}>
 				<label htmlFor="date" className={ styles['form-label'] }>
@@ -155,7 +177,7 @@ function JournalForm({ addItem, selectedPostData }) {
 					ref={ dateRef }
 					id='date'
 					name="date"
-					value={ values.date ? values.date.toISOString().slice(0, 10) : '' }
+					value={ values.date ? prepareDate(values.date).toISOString().slice(0, 10) : '' }
 					onChange={ onChangeFormFields }
 				/>
 			
@@ -193,7 +215,7 @@ function JournalForm({ addItem, selectedPostData }) {
 				value={ values.post }
 				onChange={ onChangeFormFields }
 			></textarea>
-			<Button >Save</Button>
+			<Button type='submit'>Save</Button>
 		</form>
 
 	);

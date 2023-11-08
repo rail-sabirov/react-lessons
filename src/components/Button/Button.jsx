@@ -1,9 +1,11 @@
 import './Button.css';
+import cn from 'classnames';
 
-function Button({ onClick, children }) {
+function Button({ type='button', onClick, children, className }) {
 	return (
 		<button 
-			className='button accent' 
+			type={type}
+			className={cn('button accent', className)} 
 			onClick={ onClick }>
 				{ children }
 		</button>
