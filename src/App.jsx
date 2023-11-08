@@ -25,6 +25,10 @@ function App() {
 	// Хук для чтения и изменения в localStorage
 	const [items, saveItems] = useLocalStorage('data');
 
+	// Для редактирования выбранного элемента
+	const [selectedPostData, setSelectedPostData] = useState(null);
+
+	
 	// Перебор массива для нормализации даты
 	function mapItems(items) {
 		if (!items) {
@@ -77,15 +81,19 @@ function App() {
 		
 	};
 
-	// Для редактирования выбранного элемента
-	const [selectedPostData, setSelectedPostData] = useState({});
-
+	// Удаление поста
 	const deleteItem = (id) => {
 		// Сохраняем посты в LocalStorage без поста с id
 		saveItems([...items.filter(i => i.id !== id)])
 
 		// Обнуляем выбранный пост, после удаления
-		setSelectedPostData({});
+		setSelectedPostData(null);
+	};
+
+	// Обнуляем выбранную статье, если она была ранее выбрана
+	// далее сработает useEffect который слушает изменения setSelectedPostData -> JournalForm
+	const createNewJournal = () => {
+		setSelectedPostData(null);
 	};
 
 	return (
@@ -93,7 +101,7 @@ function App() {
 			<div className="app">
 				<LeftPanel>
 					<Header />
-					<JournalAddButton/>
+					<JournalAddButton onClick={ createNewJournal } />
 					<JournalList 
 						items={ mapItems(items) } 
 						setItemFunc={ setSelectedPostData }/>

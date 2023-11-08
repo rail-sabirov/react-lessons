@@ -69,7 +69,7 @@ function JournalForm({ addItem, selectedPostData, onDelete }) {
 		}
 	}, [ isFormReadyToSubmit, values, addItem ]);
 
-	// -- Еффект который будет тригерится на изменение userId
+	// -- Еффект который будет тригерится на изменение userId / автора
 	useEffect(() => {
 		// Посылаем сигнал на обновление данных формы, если сменился пользователь
 		dispatchForm(
@@ -84,11 +84,17 @@ function JournalForm({ addItem, selectedPostData, onDelete }) {
 
 	// Для редактирования уже сохраненной статьи
 	useEffect(() => {
+		// Если нет выбранных или переданных данных у компонента в поле selectedPostData - очищаем форму
+		if (!selectedPostData) {
+			dispatchForm({ type: 'CLEAR' });
+			dispatchForm({ type: 'SET_VALUE', payload: { userId }});
+		}
+
 		dispatchForm({
 			type: 'SET_VALUE',
 			payload: { ...selectedPostData }
 		});
-	}, [selectedPostData])
+	}, [selectedPostData, userId])
 
 
 	// Добавление записи в журнал
@@ -154,7 +160,7 @@ function JournalForm({ addItem, selectedPostData, onDelete }) {
 				onChange={ onChangeFormFields }
 				placeholder="Enter title"
 			/>
-			{ selectedPostData.id && 
+			{ selectedPostData?.id && 
 			    <Button 
 					onClick={ () => deletePost(selectedPostData.id) } 
 					className={ styles['post-remove-button'] } 

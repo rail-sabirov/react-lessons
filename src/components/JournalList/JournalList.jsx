@@ -36,7 +36,7 @@ function JournalList({ items, setItemFunc }) {
 				.map(el => (
 					<CardButton 
 						key={ el.id } 
-						setItemFunc={ () => setItemFunc(el) } // Передаем текущий элемент
+						onClick={ () => setItemFunc(el) } // Передаем текущий элемент
 						>
 						<JournalItem
 							title={el.title}	
