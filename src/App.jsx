@@ -7,6 +7,7 @@ import Body from './layouts/Body/Body';
 import LeftPanel from './layouts/LeftPanel/LeftPanel';
 import { useLocalStorage } from './hooks/useLocalStorage.hook';
 import { UserContextProvider } from './context/user.context';
+import { useState } from 'react';
 
 
 function App() {
@@ -15,6 +16,10 @@ function App() {
 
 	// Корректировка даты
 	function prepareDate(date) {
+		if(date instanceof Date) {
+			return date;
+		} 
+
 		const [dateYear, dateMonth, dateDay] = date.split('-').map(Number);
 
 		return new Date(dateYear, dateMonth - 1, dateDay);
@@ -35,17 +40,45 @@ function App() {
 	// Функция для добавления новой записи в localStorage
 	const addItem = (newItem) => {
 		
-		saveItems([
-			...mapItems(items), 
-			{
-				...newItem,
-				date: prepareDate(newItem.date),
-				id: !!items && items.length > 0 
-					? Math.max(...items.map(i => i.id)) + 1 
-					: 1
-			}
-		]);
+		// Запись нового или изменение старого
+		// -- Если запись не содержит id, значит она новая
+		if (!newItem.id) {
+			saveItems([
+				...mapItems(items), 
+				{
+					...newItem,
+					date: prepareDate(newItem.date),
+					id: !!items && items.length > 0 
+						? Math.max(...items.map(i => i.id)) + 1 
+						: 1
+				}
+			]);
+		
+		} else {
+			// Сохраняем изменения для исправленного поста
+			saveItems([
+
+				// Перебираем посты
+				...mapItems(items).map(i => {
+
+					// Если id поста как у нашего, возвращаем исправленные данные
+					if (i.id === newItem.id) {
+						return {
+							...newItem,
+							date: prepareDate(newItem.date)
+						}
+					} 
+
+					// Если id не тот, тогда возвращаем оригинал
+					return i;
+				})
+			]);
+		}
+		
 	};
+
+	// Для редактирования выбранного элемента
+	const [selectedPostData, setSelectedPostData] = useState({});
 
 	return (
 		<UserContextProvider>
@@ -53,11 +86,15 @@ function App() {
 				<LeftPanel>
 					<Header />
 					<JournalAddButton/>
-					<JournalList items={ mapItems(items) }/>
+					<JournalList 
+						items={ mapItems(items) } 
+						setItemFunc={ setSelectedPostData }/>
 				</LeftPanel>
 
 				<Body>
-					<JournalForm addItem={ addItem }/>
+					<JournalForm 
+						addItem={ addItem }
+						selectedPostData={ selectedPostData }/>
 				</Body>
 			</div>
 		</UserContextProvider>

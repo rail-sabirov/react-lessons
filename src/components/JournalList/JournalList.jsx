@@ -14,7 +14,7 @@ const sortItems = (a, b) => {
 	}
 };
 
-function JournalList({ items }) {
+function JournalList({ items, setItemFunc }) {
 	if (items.length === 0) {
 		return <p>There are no posts yet, you can add a new one!</p>;
 	}	
@@ -34,7 +34,10 @@ function JournalList({ items }) {
 		<div className="journal-list">
 			{ filteredItems
 				.map(el => (
-					<CardButton key={ el.id }>
+					<CardButton 
+						key={ el.id } 
+						setItemFunc={ () => setItemFunc(el) } // Передаем текущий элемент
+						>
 						<JournalItem
 							title={el.title}	
 							text={el.post}

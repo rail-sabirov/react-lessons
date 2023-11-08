@@ -8,7 +8,7 @@ import Input from '../Input/Input';
 import { UserContext } from '../../context/user.context';
 
 
-function JournalForm({ addItem }) {
+function JournalForm({ addItem, selectedPostData }) {
 
 	// Используя useReducer
 	const [formState, dispatchForm] = useReducer(fromReducer, INITIAL_STATE);
@@ -21,7 +21,7 @@ function JournalForm({ addItem }) {
 	const dateRef = useRef();
 	const postRef = useRef();
 
-	// Работа с контекстом
+	// Работа с контекстом, получаем id автора
 	const { userId } = useContext(UserContext);
 	
 
@@ -53,7 +53,7 @@ function JournalForm({ addItem }) {
 	// -- Если форма готова и проверяна, то можно отправлять вызовом функции addItem
 	useEffect(() => {
 		if (isFormReadyToSubmit === true) {
-			// Добавляем userId если его нет
+			// Добавляем userId - автора, если его нет
 			if (!values.userId) {
 				values.userId = userId;
 			}
@@ -63,6 +63,9 @@ function JournalForm({ addItem }) {
 
 			// Отправляем сигнал для очистки полей формы
 			dispatchForm({ type: 'CLEAR' });
+
+			// После очистки нужно установить значение id автора
+			dispatchForm({ type: 'SET_VALUE', payload: { userId }});
 		}
 	}, [ isFormReadyToSubmit, values, addItem ]);
 
@@ -78,6 +81,14 @@ function JournalForm({ addItem }) {
 			}
 		); 
 	}, [ userId ]);
+
+	// Для редактирования уже сохраненной статьи
+	useEffect(() => {
+		dispatchForm({
+			type: 'SET_VALUE',
+			payload: { ...selectedPostData }
+		});
+	}, [selectedPostData])
 
 
 	// Добавление записи в журнал
@@ -144,7 +155,7 @@ function JournalForm({ addItem }) {
 					ref={ dateRef }
 					id='date'
 					name="date"
-					value={ (values.date || new Date) }
+					value={ values.date ? values.date.toISOString().slice(0, 10) : '' }
 					onChange={ onChangeFormFields }
 				/>
 			
