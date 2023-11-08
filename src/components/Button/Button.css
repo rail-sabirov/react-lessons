@@ -1,5 +1,5 @@
 .button {
-	border-radius: 6px;
+	border-radius: var(--border-radius);
 	padding: 8px 30px;
 	font-size: 16px;
 	font-family: inherit;
@@ -11,9 +11,9 @@
 }
 
 .accent:hover {
-	background: #222096;
+	background: var(--blue-hover);
 }
 
 .accent {
-	background: #312eb5;
+	background: var(--blue);
 }

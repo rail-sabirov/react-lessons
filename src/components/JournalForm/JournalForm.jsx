@@ -8,7 +8,6 @@ import Input from '../Input/Input';
 import { UserContext } from '../../context/user.context';
 import { prepareDate } from '../../App';
 
-
 function JournalForm({ addItem, selectedPostData, onDelete }) {
 
 	// Используя useReducer

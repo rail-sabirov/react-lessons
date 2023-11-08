@@ -1,7 +1,12 @@
 :root {
-  --text-color: rgba(255, 255, 255, 0.87);
-  --label-color: rgba(194, 194, 194, 0.87);
+  --text-color: #ffffffde;
+  --label-color: #c2c2c2de;
   --background-color: #181818;
+  --button-bg: #13387e;
+  --blue: #1c5edb;
+  --blue-hover: #3976eb;
+  --border-radius: 5px;
+  --font-size: 16px;
 
 
   font-family: 'Source Sans 3', sans-serif;

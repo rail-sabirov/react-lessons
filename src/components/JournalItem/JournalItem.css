@@ -1,5 +1,5 @@
 .journal-item {
-	border-radius: 3px;
+	border-radius: var(--border-radius);
 	background: rgba(128, 128, 128, 0.3);
 	color: blue;
 	padding: 20px;

@@ -1,5 +1,5 @@
 .card-button {
-	border-radius: 3px;
+	border-radius: var(--border-radius);
 	background: rgba(128, 128, 128, 0.3);
 	color: white;
 	padding: 20px;
